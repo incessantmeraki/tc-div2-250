@@ -4,29 +4,53 @@
 
 using namespace std;
 
-class SimilarUserDetection {
+class Ropestring {
   public:
-    string haveSimilar(vector <string> handles);
+    string makerope(string);
 };
 
 
-string SimilarUserDetection::haveSimilar(vector <string> handles) {
-  set <string> s;
-  int i,j;
+string Ropestring::makerope(string s) {
+  multiset<int> e,o;
+  multiset<int>::reverse_iterator mit;
+  int dots,rl,i,j;
+  string rv;
 
-  for(i=0; i<handles.size(); i++){
-    for(j=0; j<handles[i].size(); j++) {
-      if (handles[i][j] == '0')
-        handles[i][j] = 'O';
-      if (handles[i][j] == 'l' || handles[i][j] == 'I')
-        handles[i][j] = '1';
+  s.push_back('.');
+  dots = -1;
+  rl=0;
+
+  for (i=0; i<s.size(); i++) {
+    if (s[i] == '-') {
+      rl++;
     }
-    s.insert(handles[i]);
+    else {
+      if (rl>0) {
+        if (rl % 2 == 0)
+          e.insert(rl);
+        else
+          o.insert(rl);
+        rl = 0;
+      }
+      dots++;
+    }
   }
 
-  if (s.size() == handles.size())
-    return "Similar handles not found";
-  else
-    return "Similar handles found";
+  rv.resize(s.size() - 1, '.');
+  i=0;
+
+  for(mit=e.rbegin(); mit != e.rend(); mit++) {
+    rl = *mit;
+    for(j=0; j<rl; j++) rv[j+i] = '-';
+    i += (rl+1);
+  }
+
+  for(mit=o.rbegin(); mit != o.rend(); mit++) {
+    rl = *mit;
+    for(j=0; j<rl; j++) rv[j+i] = '-';
+    i += (rl+1);
+  }
+
+
 }
 
